@@ -11,9 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('year_levels', function (Blueprint $table) {
-            $table->id('year_level_id');
-            $table->string('year_level')->unique();
+        Schema::create('programs', function (Blueprint $table) {
+            $table->id('program_id');
+            $table->string('program_code')->unique();
+            $table->string('program_description');
             $table->timestamps();
         });
     }
@@ -23,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('year_levels');
+        Schema::dropIfExists('programs');
     }
 };

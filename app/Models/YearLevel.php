@@ -12,9 +12,10 @@ class YearLevel extends Model
     use HasFactory;
 
     protected $guarded = [];
+    protected $primaryKey = 'year_level_id';
 
     public function user(): HasMany
     {
-        $this->hasMany(User::class, 'year_level');
+        return $this->hasMany(User::class, 'year_level');
     }
 }

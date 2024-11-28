@@ -12,18 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('users', function (Blueprint $table) {
-            $table->string('id_number')->primary();
-            $table->string('username')->unique();
-            $table->string('first_name');
-            $table->string('last_name');
-            $table->foreignId('course')
-                ->constrained('courses')
-                ->cascadeOnDelete()
-                ->cascadeOnUpdate();
-            $table->foreignId('year_level')
-                ->constrained('year_levels')
-                ->cascadeOnDelete()
-                ->cascadeOnUpdate();
+            $table->id('user_id');
+            $table->string('username');
             $table->string('password')->default(bcrypt('1234'));
             $table->rememberToken();
             $table->timestamps();
