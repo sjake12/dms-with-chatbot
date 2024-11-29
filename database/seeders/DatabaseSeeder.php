@@ -20,6 +20,7 @@ class DatabaseSeeder extends Seeder
         $this->call([
             CourseAndYearLevelSeeder::class,
             SubjectSeeder::class,
+            RoleAndPermissionSeeder::class,
         ]);
 
         Student::factory(400)->create();

@@ -40,10 +40,12 @@ class Student extends Model
         parent::boot();
 
         static::created(function ($student) {
-            User::create([
+           $user =  User::create([
                 'username' => $student->student_id,
                 'password' => bcrypt('1234')
             ]);
+
+           $user->assignRole('student');
         });
     }
 }

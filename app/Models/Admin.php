@@ -24,10 +24,12 @@ class Admin extends Model
         parent::boot();
 
         static::created(function ($admin) {
-           User::create([
-               'username' => $admin->admin_id,
-               'password' => bcrypt('admin')
-           ]);
+            $user = User::create([
+                'username' => $admin->admin_id,
+                'password' => bcrypt('admin'),
+            ]);
+
+            $user->assignRole('admin');
         });
     }
 }

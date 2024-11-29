@@ -18,10 +18,12 @@ class Faculty extends Model
         parent::boot();
 
         static::created(function ($faculty) {
-            User::create([
+            $user = User::create([
                 'username' => $faculty->faculty_id,
                 'password' => bcrypt('faculty')
             ]);
+
+            $user->assignRole('faculty');
         });
     }
 }

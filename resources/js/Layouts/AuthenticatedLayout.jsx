@@ -6,8 +6,8 @@ import { Link, usePage } from '@inertiajs/react';
 import { useState } from 'react';
 
 export default function AuthenticatedLayout({ header, children }) {
-    const user = usePage().props.auth.user;
-
+    const user = usePage().props.auth;
+    console.log(user);
     const [showingNavigationDropdown, setShowingNavigationDropdown] =
         useState(false);
 
