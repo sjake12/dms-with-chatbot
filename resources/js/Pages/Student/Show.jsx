@@ -2,7 +2,7 @@ import { Head, usePage } from "@inertiajs/react";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.jsx";
 
 export default function Show(){
-   const user = usePage().props.auth.user;
+   const student = usePage().props.student;
     return (
         <AuthenticatedLayout
             header={
@@ -19,9 +19,9 @@ export default function Show(){
                         <div className="p-6 text-gray-900" >
                             <h2 className="text-2xl font-bold mb-4" >Personal Information</h2 >
 
-                            <div className="grid grid-cols-2 ">
-                                {Object.entries(user).map(([key, value]) => (
-                                    <div className="mb-4" key={key}>
+                            <div className="grid grid-cols-2 gap-4">
+                                {Object.entries(student).map(([key, value]) => (
+                                    <div className="mb-4 break-words" key={key}>
                                         <label className="block text-lg font-medium text-neutral-400">
                                             {key.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}:
                                         </label>

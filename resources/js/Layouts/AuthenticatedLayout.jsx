@@ -1,10 +1,8 @@
-import ApplicationLogo from '@/Components/ApplicationLogo';
 import Dropdown from '@/Components/Dropdown';
 import NavLink from '@/Components/NavLink';
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink';
 import { Link, usePage } from '@inertiajs/react';
 import { useState } from 'react';
-import PermissionGate from "@/Pages/Auth/PermissionGate.jsx";
 import RoleGate from "@/Pages/Auth/RoleGate.jsx";
 import Chip from '@mui/material/Chip';
 
@@ -50,10 +48,26 @@ export default function AuthenticatedLayout({ header, children }) {
                                     </div >
                                     <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex" >
                                         <NavLink
-                                            // href={route('student.show', user.student_id)}
-                                            // active={route().current('student.show')}
+                                            href={route('academic-record.show', user.student_id)}
+                                            active={route().current('academic-record.show')}
                                         >
                                             My Grades
+                                        </NavLink >
+                                    </div >
+                                    <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex" >
+                                        <NavLink
+                                            href={route('enrollments.show', user.student_id)}
+                                            active={route().current('enrollments.show')}
+                                        >
+                                            My Subject Enrollments
+                                        </NavLink >
+                                    </div >
+                                    <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex" >
+                                        <NavLink
+                                            href={route('subjects.index')}
+                                            active={route().current('subjects.index')}
+                                        >
+                                            Subjects
                                         </NavLink >
                                     </div >
                                 </RoleGate >
@@ -164,6 +178,42 @@ export default function AuthenticatedLayout({ header, children }) {
                         </ResponsiveNavLink>
                     </div>
 
+                    {role === 'student' && (
+                        <RoleGate role="student" >
+                            <div className="space-y-1 pb-3 pt-2" >
+                                <ResponsiveNavLink
+                                    href={route('student.show', user.student_id)}
+                                    active={route().current('student.show')}
+                                >
+                                    My Profile
+                                </ResponsiveNavLink >
+                            </div >
+                            <div className="space-y-1 pb-3 pt-2" >
+                                <ResponsiveNavLink
+                                    href={route('academic-record.show', user.student_id)}
+                                    active={route().current('academic-record.show')}
+                                >
+                                    My Grades
+                                </ResponsiveNavLink >
+                            </div >
+                            <div className="space-y-1 pb-3 pt-2" >
+                                <ResponsiveNavLink
+                                    href={route('enrollments.show', user.student_id)}
+                                    active={route().current('enrollments.show')}
+                                >
+                                    My Subject Enrollments
+                                </ResponsiveNavLink >
+                            </div >
+                            <div className="space-y-1 pb-3 pt-2" >
+                                <ResponsiveNavLink
+                                    href={route('subjects.index')}
+                                    active={route().current('subjects.index')}
+                                >
+                                    Subjects
+                                </ResponsiveNavLink >
+                            </div >
+                        </RoleGate >
+                    )}
                     <div className="border-t border-gray-200 pb-1 pt-4">
                         <div className="px-4">
                             <div className="text-base font-medium text-gray-800">

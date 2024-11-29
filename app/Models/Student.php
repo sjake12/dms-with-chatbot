@@ -30,9 +30,9 @@ class Student extends Model
         return $this->hasOne(Program::class, 'program_id', 'program_id');
     }
 
-    public function year_level(): HasOne
+    public function yearLevel(): HasOne
     {
-        return $this->hasOne(YearLevel::class, 'year_level_id', 'year_level_id');
+        return $this->hasOne(YearLevel::class, 'year_level_id', 'year_level');
     }
 
     protected static function boot():void
