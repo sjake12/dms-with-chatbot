@@ -22,9 +22,9 @@ class DatabaseSeeder extends Seeder
             SubjectSeeder::class,
             RoleAndPermissionSeeder::class,
             FacultySubjectSeeder::class,
+            EnrollmentSeeder::class,
+            AcademicRecordsSeeder::class,
         ]);
-
-        Student::factory(100)->create();
 
         Admin::factory()->create([
             'admin_id' => '12345',

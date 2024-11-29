@@ -53,7 +53,7 @@ export default function AuthenticatedLayout({ header, children }) {
                                             // href={route('student.show', user.student_id)}
                                             // active={route().current('student.show')}
                                         >
-                                            My Enrollment Status
+                                            My Grades
                                         </NavLink >
                                     </div >
                                 </RoleGate >

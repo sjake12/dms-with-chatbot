@@ -3,7 +3,6 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.jsx";
 
 export default function Show(){
    const user = usePage().props.auth.user;
-    console.log(user);
     return (
         <AuthenticatedLayout
             header={
