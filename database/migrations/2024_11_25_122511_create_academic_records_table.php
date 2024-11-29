@@ -21,7 +21,7 @@ return new class extends Migration
                 ->constrained('subjects', 'subject_id')
                 ->onUpdate('cascade')
                 ->onDelete('cascade');
-            $table->decimal('grade', 5, 2);
+            $table->decimal('grade', 5, 2)->nullable();
             $table->string('semester');
             $table->string('academic_year');
             $table->timestamps();

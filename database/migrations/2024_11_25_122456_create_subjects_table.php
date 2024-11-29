@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('subject_code')->unique();
             $table->string('description');
             $table->integer('units');
-            $table->boolean('is_active')->default(true);
+            $table->boolean('is_active')->default(false);
             $table->timestamps();
         });
     }

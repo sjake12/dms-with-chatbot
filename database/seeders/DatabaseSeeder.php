@@ -21,10 +21,10 @@ class DatabaseSeeder extends Seeder
             CourseAndYearLevelSeeder::class,
             SubjectSeeder::class,
             RoleAndPermissionSeeder::class,
+            FacultySubjectSeeder::class,
         ]);
 
-        Student::factory(400)->create();
-        Faculty::factory(50)->create();
+        Student::factory(100)->create();
 
         Admin::factory()->create([
             'admin_id' => '12345',

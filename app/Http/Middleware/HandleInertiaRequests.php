@@ -4,7 +4,9 @@ namespace App\Http\Middleware;
 
 use App\Models\Admin;
 use App\Models\Faculty;
+use App\Models\Program;
 use App\Models\Student;
+use App\Models\YearLevel;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
 
@@ -35,14 +37,16 @@ class HandleInertiaRequests extends Middleware
         $id = $request->user()->username ?? null;
         $user = Student::find($id) ?? Faculty::find($id) ?? Admin::find($id);
         $permissions = $request->user() ? $request->user()->getAllPermissions() : null;
+        $role = $request->user() ? $request->user()->getRoleNames()->first() : null;
 
         return [
             ...parent::share($request),
             'auth' => [
                 'user' => $user,
-                'permissions' => $permissions->map(function ($permission) {
+                'permissions' => $permissions ? $permissions->map(function ($permission) {
                     return $permission->name;
-                })
+                }) : null,
+                'role' => $role,
             ],
         ];
     }

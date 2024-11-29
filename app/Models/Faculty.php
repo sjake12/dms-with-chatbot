@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Faculty extends Model
 {
@@ -25,5 +26,21 @@ class Faculty extends Model
 
             $user->assignRole('faculty');
         });
+    }
+
+    // Relationship to subjects
+    public function assignedSubjects(): BelongsToMany
+    {
+        return $this->belongsToMany(Subject::class, 'faculty_subject', 'faculty_id', 'subject_id')
+            ->withPivot('can_assign_grades');
+    }
+
+    // Method to check if faculty can assign grades for a specific subject
+    public function canAssignGradesForSubject($subjectId): bool
+    {
+        return $this->assignedSubjects()
+            ->where('subjects.subject_id', $subjectId)
+            ->where('faculty_subject.can_assign_grades', true)
+            ->exists();
     }
 }

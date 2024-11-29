@@ -4,10 +4,13 @@ import NavLink from '@/Components/NavLink';
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink';
 import { Link, usePage } from '@inertiajs/react';
 import { useState } from 'react';
+import PermissionGate from "@/Pages/Auth/PermissionGate.jsx";
+import RoleGate from "@/Pages/Auth/RoleGate.jsx";
+import Chip from '@mui/material/Chip';
 
 export default function AuthenticatedLayout({ header, children }) {
-    const user = usePage().props.auth;
-    console.log(user);
+    const user = usePage().props.auth.user;
+    const role = usePage().props.auth.role;
     const [showingNavigationDropdown, setShowingNavigationDropdown] =
         useState(false);
 
@@ -27,20 +30,42 @@ export default function AuthenticatedLayout({ header, children }) {
                             </div >
 
                             <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex" >
-                            <NavLink
+                                <NavLink
                                     href={route('dashboard')}
                                     active={route().current('dashboard')}
                                 >
                                     Dashboard
                                 </NavLink>
                             </div>
-                        </div>
 
-                        <div className="hidden sm:ms-6 sm:flex sm:items-center">
-                            <div className="relative ms-3">
-                                <Dropdown>
-                                    <Dropdown.Trigger>
-                                        <span className="inline-flex rounded-md">
+                            {role === 'student' && (
+                                <RoleGate role="student" >
+                                    <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex" >
+                                        <NavLink
+                                            href={route('student.show', user.student_id)}
+                                            active={route().current('student.show')}
+                                        >
+                                            My Profile
+                                        </NavLink >
+                                    </div >
+                                    <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex" >
+                                        <NavLink
+                                            // href={route('student.show', user.student_id)}
+                                            // active={route().current('student.show')}
+                                        >
+                                            My Enrollment Status
+                                        </NavLink >
+                                    </div >
+                                </RoleGate >
+                            )}
+                        </div >
+
+                        <div className="hidden sm:ms-6 sm:flex sm:items-center" >
+                            <Chip label={role} size="small" />
+                            <div className="relative ms-3" >
+                                <Dropdown >
+                                    <Dropdown.Trigger >
+                                        <span className="inline-flex rounded-md" >
                                             <button
                                                 type="button"
                                                 className="inline-flex items-center rounded-md border border-transparent bg-white px-3 py-2 text-sm font-medium leading-4 text-gray-500 transition duration-150 ease-in-out hover:text-gray-700 focus:outline-none"
@@ -58,30 +83,30 @@ export default function AuthenticatedLayout({ header, children }) {
                                                         d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
                                                         clipRule="evenodd"
                                                     />
-                                                </svg>
-                                            </button>
-                                        </span>
-                                    </Dropdown.Trigger>
+                                                </svg >
+                                            </button >
+                                        </span >
+                                    </Dropdown.Trigger >
 
-                                    <Dropdown.Content>
+                                    <Dropdown.Content >
                                         <Dropdown.Link
                                             href={route('profile.edit')}
                                         >
-                                            Profile
-                                        </Dropdown.Link>
+                                            Settings
+                                        </Dropdown.Link >
                                         <Dropdown.Link
                                             href={route('logout')}
                                             method="post"
                                             as="button"
                                         >
                                             Log Out
-                                        </Dropdown.Link>
-                                    </Dropdown.Content>
-                                </Dropdown>
-                            </div>
-                        </div>
+                                        </Dropdown.Link >
+                                    </Dropdown.Content >
+                                </Dropdown >
+                            </div >
+                        </div >
 
-                        <div className="-me-2 flex items-center sm:hidden">
+                        <div className="-me-2 flex items-center sm:hidden" >
                             <button
                                 onClick={() =>
                                     setShowingNavigationDropdown(
@@ -151,7 +176,7 @@ export default function AuthenticatedLayout({ header, children }) {
 
                         <div className="mt-3 space-y-1">
                             <ResponsiveNavLink href={route('profile.edit')}>
-                                Profile
+                                Settings
                             </ResponsiveNavLink>
                             <ResponsiveNavLink
                                 method="post"
