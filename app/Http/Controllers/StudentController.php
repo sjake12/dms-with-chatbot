@@ -8,13 +8,11 @@ use Inertia\Inertia;
 
 class StudentController extends Controller
 {
-    public function index() {}
-
-    public function show(Student $student)
+    public function index(Student $student)
     {
-        return Inertia::render('Student/Show', [
+        return Inertia::render('Student/Show.jsx', [
             'student' => [
-               'student_id' => $student->student_id,
+                'student_id' => $student->student_id,
                 'first_name' => $student->first_name,
                 'middle_name' => $student->middle_name,
                 'last_name' => $student->last_name,

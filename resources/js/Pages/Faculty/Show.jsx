@@ -4,12 +4,12 @@ import NavLink from "@/Components/NavLink.jsx";
 import PrimaryButton from "@/Components/PrimaryButton.jsx";
 
 export default function Show(){
-   const student = usePage().props.student;
+    const faculty = usePage().props.faculty;
     return (
         <AuthenticatedLayout
             header={
                 <h2 className="text-xl font-semibold leading-tight text-gray-800" >
-                    Student Profile
+                    Faculty Profile
                 </h2 >
             }
         >
@@ -22,7 +22,7 @@ export default function Show(){
                             <h2 className="text-2xl font-bold mb-4" >Personal Information</h2 >
 
                             <div className="grid grid-cols-2 gap-4">
-                                {Object.entries(student).map(([key, value]) => (
+                                {Object.entries(faculty).map(([key, value]) => (
                                     <div className="mb-4 break-words" key={key}>
                                         <label className="block text-lg font-medium text-neutral-400">
                                             {key.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}:

@@ -4,9 +4,9 @@ namespace Database\Seeders;
 
 use App\Models\Faculty;
 use App\Models\Subject;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Collection;
 
 class FacultySubjectSeeder extends Seeder
 {
@@ -17,7 +17,7 @@ class FacultySubjectSeeder extends Seeder
     {
         // Clear existing faculty-subject assignments
         DB::table('faculty_subject')->delete();
-        Faculty::factory(15)->create();
+        Faculty::factory(10)->create();
 
         // Get all subjects and faculties
         $subjects = Subject::all();
@@ -61,44 +61,67 @@ class FacultySubjectSeeder extends Seeder
             throw new \Exception("Not enough faculties. Please seed more faculties before running this seeder.");
         }
 
-        // Distribute subjects across faculties with some specialization
-        $faculties->each(function ($faculty, $index) use ($subjects, $subjectCategories) {
+        // Shuffle faculties and subjects to distribute randomness
+        $shuffledFaculties = $faculties->shuffle();
+        $shuffledSubjects = $subjects->shuffle();
+
+        // Track assigned subject IDs to ensure each subject is assigned to only one faculty
+        $assignedSubjectIds = collect();
+
+        // Ensure every faculty gets at least one subject
+        $shuffledFaculties->each(function ($faculty) use ($shuffledFaculties, $shuffledSubjects, $subjectCategories, &$assignedSubjectIds) {
             // Create a specialization for each faculty
             $specializations = array_keys($subjectCategories);
-            $facultySpecialization = $specializations[$index % count($specializations)];
+            $facultySpecialization = $specializations[array_search($faculty->name, $shuffledFaculties->pluck('name')->toArray()) % count($specializations)];
 
-            // Select subjects based on specialization
-            $assignedSubjectIds = $subjects
-                ->filter(function ($subject) use ($subjectCategories, $facultySpecialization) {
-                    // Prioritize subjects in the faculty's specialization
-                    return collect($subjectCategories[$facultySpecialization])
-                        ->contains(fn($code) =>
-                            stripos($subject->subject_code, $code) !== false ||
-                            stripos($subject->description, $code) !== false
-                        );
-                })
-                ->pluck('subject_id')
-                ->toArray();
+            // Find an available subject
+            $availableSubjects = $shuffledSubjects->whereNotIn('subject_id', $assignedSubjectIds);
 
-            // Randomly add some additional subjects to ensure variety
-            $additionalSubjects = $subjects
-                ->except($assignedSubjectIds)
-                ->random(max(3, round($subjects->count() * 0.1))) // Add 10% more subjects or at least 3
-                ->pluck('subject_id')
-                ->toArray();
+            // Prioritize subjects in the faculty's specialization
+            $specializedSubjects = $availableSubjects->filter(function ($subject) use ($subjectCategories, $facultySpecialization) {
+                return collect($subjectCategories[$facultySpecialization])
+                    ->contains(fn($code) =>
+                        stripos($subject->subject_code, $code) !== false ||
+                        stripos($subject->description, $code) !== false
+                    );
+            });
 
-            $allSubjectIds = array_merge($assignedSubjectIds, $additionalSubjects);
+            // Select a subject for the faculty
+            $selectedSubject = $specializedSubjects->first() ?? $availableSubjects->first();
 
-            // Attach subjects with random grade assignment permission
-            foreach ($allSubjectIds as $subjectId) {
-                DB::table('faculty_subject')->insert([
-                    'faculty_id' => $faculty->faculty_id,
-                    'subject_id' => $subjectId,
-                    'can_assign_grades' => rand(0, 1) == 1, // 50% chance of grade assignment
-                    'created_at' => now(),
-                    'updated_at' => now()
-                ]);
+            if (!$selectedSubject) {
+                throw new \Exception("Not enough subjects to assign to all faculties.");
             }
+
+            // Attach the subject to the faculty
+            DB::table('faculty_subject')->insert([
+                'faculty_id' => $faculty->faculty_id,
+                'subject_id' => $selectedSubject->subject_id,
+                'can_assign_grades' => true,
+                'created_at' => now(),
+                'updated_at' => now()
+            ]);
+
+            // Track the assigned subject
+            $assignedSubjectIds->push($selectedSubject->subject_id);
         });
+
+        // If there are remaining subjects, distribute them to faculties
+        $remainingSubjects = $shuffledSubjects->whereNotIn('subject_id', $assignedSubjectIds);
+        $facultyIndex = 0;
+
+        foreach ($remainingSubjects as $subject) {
+            $faculty = $shuffledFaculties[$facultyIndex];
+
+            DB::table('faculty_subject')->insert([
+                'faculty_id' => $faculty->faculty_id,
+                'subject_id' => $subject->subject_id,
+                'can_assign_grades' => true,
+                'created_at' => now(),
+                'updated_at' => now()
+            ]);
+
+            $facultyIndex = ($facultyIndex + 1) % $shuffledFaculties->count();
+        }
     }
 }

@@ -17,7 +17,7 @@ class FacultyFactory extends Factory
     public function definition(): array
     {
         return [
-            'faculty_id' => fake()->unique()->randomNumber(4),
+            'faculty_id' => fake()->unique()->numberBetween(20000, 22999),
             'first_name' => fake()->firstName,
             'middle_name' => fake()->lastName,
             'last_name' => fake()->lastName,

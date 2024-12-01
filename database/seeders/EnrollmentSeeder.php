@@ -32,7 +32,7 @@ class EnrollmentSeeder extends Seeder
         // Enroll students in random subjects
         foreach ($students as $student) {
             // Randomly decide number of subjects (between 4 and 7)
-            $subjectCount = rand(4, 7);
+            $subjectCount = rand(6, 20);
 
             // Randomly select unique subjects
             $selectedSubjects = $allSubjects->random($subjectCount);

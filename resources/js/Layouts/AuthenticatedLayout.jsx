@@ -40,16 +40,16 @@ export default function AuthenticatedLayout({ header, children }) {
                                 <RoleGate role="student" >
                                     <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex" >
                                         <NavLink
-                                            href={route('student.show', user.student_id)}
-                                            active={route().current('student.show')}
+                                            href={route('student.index', user.student_id)}
+                                            active={route().current('student.index')}
                                         >
                                             My Profile
                                         </NavLink >
                                     </div >
                                     <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex" >
                                         <NavLink
-                                            href={route('academic-record.show', user.student_id)}
-                                            active={route().current('academic-record.show')}
+                                            href={route('academic-record.index', user.student_id)}
+                                            active={route().current('academic-record.index')}
                                         >
                                             My Grades
                                         </NavLink >
@@ -68,6 +68,28 @@ export default function AuthenticatedLayout({ header, children }) {
                                             active={route().current('subjects.index')}
                                         >
                                             Subjects
+                                        </NavLink >
+                                    </div >
+                                </RoleGate >
+                            )}
+
+                            {role === 'faculty' && (
+                                <RoleGate role="faculty" >
+                                    <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex" >
+                                        <NavLink
+                                            href={route('faculty.show', user.faculty_id)}
+                                            active={route().current('faculty.show')}
+                                        >
+                                            My Profile
+                                        </NavLink >
+                                    </div >
+
+                                    <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex" >
+                                        <NavLink
+                                            href={route('faculty-subject.index', user.faculty_id)}
+                                            active={route().current('faculty-subject.index')}
+                                        >
+                                            My Subject Advisories
                                         </NavLink >
                                     </div >
                                 </RoleGate >
@@ -182,16 +204,16 @@ export default function AuthenticatedLayout({ header, children }) {
                         <RoleGate role="student" >
                             <div className="space-y-1 pb-3 pt-2" >
                                 <ResponsiveNavLink
-                                    href={route('student.show', user.student_id)}
-                                    active={route().current('student.show')}
+                                    href={route('student.index', user.student_id)}
+                                    active={route().current('student.index')}
                                 >
                                     My Profile
                                 </ResponsiveNavLink >
                             </div >
                             <div className="space-y-1 pb-3 pt-2" >
                                 <ResponsiveNavLink
-                                    href={route('academic-record.show', user.student_id)}
-                                    active={route().current('academic-record.show')}
+                                    href={route('academic-record.index', user.student_id)}
+                                    active={route().current('academic-record.index')}
                                 >
                                     My Grades
                                 </ResponsiveNavLink >
