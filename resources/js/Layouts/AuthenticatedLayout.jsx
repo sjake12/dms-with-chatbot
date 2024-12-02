@@ -27,17 +27,16 @@ export default function AuthenticatedLayout({ header, children }) {
                                 </Link >
                             </div >
 
-                            <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex" >
-                                <NavLink
-                                    href={route('dashboard')}
-                                    active={route().current('dashboard')}
-                                >
-                                    Dashboard
-                                </NavLink>
-                            </div>
-
                             {role === 'student' && (
                                 <RoleGate role="student" >
+                                    <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex" >
+                                        <NavLink
+                                            href={route('student.dashboard')}
+                                            active={route().current('student.dashboard')}
+                                        >
+                                            Dashboard
+                                        </NavLink >
+                                    </div >
                                     <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex" >
                                         <NavLink
                                             href={route('student.index', user.student_id)}
@@ -77,6 +76,15 @@ export default function AuthenticatedLayout({ header, children }) {
                                 <RoleGate role="faculty" >
                                     <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex" >
                                         <NavLink
+                                            href={route('faculty.dashboard')}
+                                            active={route().current('faculty.dashboard')}
+                                        >
+                                            Dashboard
+                                        </NavLink >
+                                    </div >
+
+                                    <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex" >
+                                        <NavLink
                                             href={route('faculty.show', user.faculty_id)}
                                             active={route().current('faculty.show')}
                                         >
@@ -90,6 +98,46 @@ export default function AuthenticatedLayout({ header, children }) {
                                             active={route().current('faculty-subject.index')}
                                         >
                                             My Subject Advisories
+                                        </NavLink >
+                                    </div >
+                                </RoleGate >
+                            )}
+
+                            {role === 'admin' && (
+                                <RoleGate role="admin" >
+                                    <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex" >
+                                        <NavLink
+                                            href={route('admin.dashboard')}
+                                            active={route().current('admin.dashboard')}
+                                        >
+                                            Dashboard
+                                        </NavLink >
+                                    </div >
+
+                                    <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex" >
+                                        <NavLink
+                                            href={route('admin.index', user.admin_id)}
+                                            active={route().current('admin.index')}
+                                        >
+                                            My Profile
+                                        </NavLink >
+                                    </div >
+
+                                    <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex" >
+                                        <NavLink
+                                            href={route('admin-student')}
+                                            active={route().current('admin-student')}
+                                        >
+                                            Students
+                                        </NavLink >
+                                    </div >
+
+                                    <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex" >
+                                        <NavLink
+                                            href={route('admin-faculties')}
+                                            active={route().current('admin-faculties')}
+                                        >
+                                            Faculties
                                         </NavLink >
                                     </div >
                                 </RoleGate >

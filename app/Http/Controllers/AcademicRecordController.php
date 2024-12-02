@@ -13,7 +13,7 @@ class AcademicRecordController extends Controller
 {
     public function index(Student $student)
     {
-        return Inertia::render('AcademicRecord/Show.jsx', [
+        return Inertia::render('AcademicRecord/Show', [
             'subjects' => $student->academicRecords->map(function ($record) {
                 return [
                     'subject_code' => $record->subject->subject_code,

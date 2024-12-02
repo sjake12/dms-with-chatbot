@@ -14,8 +14,8 @@ class Program extends Model
     protected $guarded = [];
     protected $primaryKey = 'program_id';
 
-    public function user(): HasMany
+    public function students(): HasMany
     {
-        return $this->hasMany(User::class, 'course');
+        return $this->hasMany(Student::class, 'program_id', 'program_id');
     }
 }

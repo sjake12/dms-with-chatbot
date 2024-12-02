@@ -10,7 +10,7 @@ class StudentController extends Controller
 {
     public function index(Student $student)
     {
-        return Inertia::render('Student/Show.jsx', [
+        return Inertia::render('Student/Show', [
             'student' => [
                 'student_id' => $student->student_id,
                 'first_name' => $student->first_name,

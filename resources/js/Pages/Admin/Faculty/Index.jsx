@@ -1,58 +1,53 @@
-import { usePage } from "@inertiajs/react";
+import { Head, usePage } from "@inertiajs/react";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.jsx";
-import PrimaryButton from "@/Components/PrimaryButton.jsx";
 import NavLink from "@/Components/NavLink.jsx";
 import { useState } from "react";
+import PrimaryButton from "@/Components/PrimaryButton.jsx";
 
-export default function Show() {
-    const classList = usePage().props.class_list;
-    const subject = usePage().props.class;
-    const faculty = usePage().props.auth.user;
+export default function Index(){
+    const faculties = usePage().props.faculties;
     const [searchQuery, setSearchQuery] = useState('');
 
-    // Filter students based on selected program and search query
-    const filteredStudents = classList.filter(student =>
+
+    const filteredFaculties = faculties.filter(faculty =>
         (searchQuery === '' ||
-            String(student.student_id).toLowerCase().includes(searchQuery.toLowerCase()) ||
-            student.first_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            student.last_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            (student.middle_name && student.middle_name.toLowerCase().includes(searchQuery.toLowerCase())))
+            String(faculty.faculty_id).toLowerCase().includes(searchQuery.toLowerCase()) ||
+            faculty.first_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            faculty.last_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            (faculty.middle_name && faculty.middle_name.toLowerCase().includes(searchQuery.toLowerCase())))
     );
 
     return (
         <AuthenticatedLayout
             header={
-                <div className="flex justify-between items-center">
-                    <h2 className="text-xl font-semibold leading-tight text-gray-800" >
-                        {subject.subject_code} - {subject.subject_description}
-                    </h2 >
-
-                    <NavLink
-                        href={route('faculty-subject.index', faculty.faculty_id) }
-                    >
-                        <PrimaryButton>
-                            Back
-                        </PrimaryButton>
-                    </NavLink>
-                </div >
+                <h2 className="text-xl font-semibold leading-tight text-gray-800" >
+                    Faculties
+                </h2 >
             }
         >
+            <Head title="Faculties" />
+
             <div className="py-12" >
-                <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
-                    <div className="overflow-hidden bg-white shadow-sm sm:rounded-lg">
+                <div className="mx-auto max-w-7xl sm:px-6 lg:px-8" >
+                    <div className="overflow-hidden bg-white shadow-sm sm:rounded-lg" >
                         <div className="p-6 text-gray-900" >
+                            <NavLink href={route('admin-faculty-create')}>
+                                <PrimaryButton>
+                                    Add Faculty
+                                </PrimaryButton>
+                            </NavLink>
                             <input
                                 type="text"
                                 placeholder="Search students by ID, name..."
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
-                                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 mb-6"
+                                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 my-6"
                             />
                             <table className="min-w-full divide-y divide-gray-200" >
                                 <thead >
                                     <tr >
                                         <th className="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" >
-                                            Student ID
+                                            ID
                                         </th >
                                         <th className="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" >
                                             Last Name
@@ -64,7 +59,7 @@ export default function Show() {
                                             Middle Name
                                         </th >
                                         <th className="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" >
-                                            Grade
+                                            Email
                                         </th >
                                         <th className="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" >
                                             Actions
@@ -72,35 +67,32 @@ export default function Show() {
                                     </tr >
                                 </thead >
                                 <tbody className="bg-white divide-y divide-gray-200" >
-                                    {filteredStudents
+                                    {filteredFaculties
                                         .sort((a, b) => a.last_name.localeCompare(b.last_name))
-                                        .map((student, index) => (
+                                        .map((faculty, index) => (
                                             <tr key={index} >
                                                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900" >
-                                                    {student.student_id}
+                                                    {faculty.faculty_id}
                                                 </td >
                                                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900" >
-                                                    {student.last_name}
+                                                    {faculty.last_name}
                                                 </td >
                                                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900" >
-                                                    {student.first_name}
+                                                    {faculty.first_name}
                                                 </td >
                                                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900" >
-                                                    {student.middle_name}
+                                                    {faculty.middle_name}
                                                 </td >
                                                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900" >
-                                                    {student.grade}
+                                                    {faculty.email}
                                                 </td >
                                                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900" >
                                                     <NavLink
-                                                        href={route('academic-record.show', {
-                                                            student: student.student_id,
-                                                            subject: subject.subject_id
-                                                        })}
+                                                        href={route('admin-faculty-show', { faculty: faculty.faculty_id })}
                                                     >
                                                     <span
-                                                        className="bg-blue-500 text-white text-md font-bold py-2 px-3 rounded-lg hover:bg-blue-400" >
-                                                        Assign Grade
+                                                        className="bg-blue-500 text-white font-bold text-md py-2 px-3 rounded hover:bg-blue-400" >
+                                                        View
                                                     </span >
                                                     </NavLink >
                                                 </td >
@@ -113,5 +105,5 @@ export default function Show() {
                 </div >
             </div >
         </AuthenticatedLayout >
-    )
+    );
 }

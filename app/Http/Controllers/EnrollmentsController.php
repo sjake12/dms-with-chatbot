@@ -10,7 +10,7 @@ class EnrollmentsController extends Controller
 {
     public function show(Student $student)
     {
-        return Inertia::render('Enrollments/Show.jsx', [
+        return Inertia::render('Enrollments/Show', [
             'enrollments' => $student->enrollments->map(function ($enrollment) {
                 return [
                     'subject_code' => $enrollment->subject->subject_code,
