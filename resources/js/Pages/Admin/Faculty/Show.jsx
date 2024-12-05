@@ -119,6 +119,15 @@ export default function Show(){
                                         ))}
                                 </tbody >
                             </table >
+
+                            <NavLink
+                                href={route('admin-faculty-subject-add', faculty.faculty_id)}
+                            >
+                                    <span
+                                        className="text-white bg-blue-500 text-md py-2 px-3 rounded-lg hover:bg-blue-400 mt-6" >
+                                        Add subject
+                                    </span >
+                            </NavLink >
                         </div >
                     </div >
                 </div >

@@ -5,6 +5,7 @@ import { Link, usePage } from '@inertiajs/react';
 import { useState } from 'react';
 import RoleGate from "@/Pages/Auth/RoleGate.jsx";
 import Chip from '@mui/material/Chip';
+import RasaChatBubble from "@/Components/RasaChatBubble.jsx";
 
 export default function AuthenticatedLayout({ header, children }) {
     const user = usePage().props.auth.user;
@@ -317,7 +318,7 @@ export default function AuthenticatedLayout({ header, children }) {
                     </div>
                 </header>
             )}
-
+            <RasaChatBubble/>
             <main>{children}</main>
         </div>
     );

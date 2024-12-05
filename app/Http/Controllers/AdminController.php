@@ -6,8 +6,10 @@ use App\Models\Admin;
 use App\Models\Faculty;
 use App\Models\Program;
 use App\Models\Student;
+use App\Models\Subject;
 use App\Models\YearLevel;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 
 class AdminController extends Controller
@@ -281,5 +283,83 @@ class AdminController extends Controller
         $faculty->delete();
 
         return redirect()->route('admin-faculties')->with('message', 'Faculty deleted successfully');
+    }
+
+    public function facultyAddSubject(Faculty $faculty)
+    {
+        // Get all subjects that haven't been assigned to this faculty
+        $availableSubjects = Subject::whereNotIn('subject_id',
+            $faculty->assignedSubjects()->pluck('subjects.subject_id')
+        )->get();
+
+        return Inertia::render('Admin/Faculty/AddSubject', [
+            'faculty' => $faculty,
+            'subjects' => $availableSubjects
+        ]);
+    }
+
+    /**
+     * Store a new subject-faculty relationship
+     *
+     * @param Request $request
+     * @param Faculty $faculty
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function storeFacultySubject(Request $request, Faculty $faculty)
+    {
+        $request->validate([
+            'subject_id' => [
+                'nullable',
+                'exists:subjects,subject_id',
+            ],
+            'subject_code' => 'required|string|max:255',
+            'description' => 'required|string',
+            'units' => 'required|integer|min:1|max:10'
+        ]);
+
+        try {
+            // If subject_id is not provided, create a new subject
+            if (!$request->subject_id) {
+                $subject = Subject::create([
+                    'subject_code' => $request->subject_code,
+                    'description' => $request->description,
+                    'units' => $request->units,
+                    'is_active' => true
+                ]);
+                $subjectId = $subject->subject_id;
+            } else {
+                $subjectId = $request->subject_id;
+            }
+
+            // Check if the subject is already assigned to the faculty
+            $existingAssignment = $faculty->subjects()->where('subjects.subject_id', $subjectId)->exists();
+
+            if (!$existingAssignment) {
+                // Attach the subject to the faculty
+                $faculty->subjects()->attach($subjectId, [
+                    'can_assign_grades' => true
+                ]);
+            }
+
+            return redirect()->route('admin-faculty-show', $faculty)
+                ->with('success', 'Subject successfully assigned to faculty');
+
+        } catch (\Exception $e) {
+            return back()->withErrors(['error' => 'Error assigning subject to faculty']);
+        }
+    }
+
+    /**
+     * Get subjects for autocomplete (API endpoint)
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getSubjectSuggestions()
+    {
+        $subjects = Subject::select('subject_id', 'subject_code', 'description', 'units')
+            ->where('is_active', true)
+            ->get();
+
+        return response()->json($subjects);
     }
 }
